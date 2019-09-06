@@ -7,7 +7,7 @@ all: ips projects
 create_project_dir:
 	mkdir -p project
 
-projects = fns-single-toe-iperf fns-single-toe-echo
+projects = vcu118-fns-single-toe-iperf vcu118-fns-single-toe-echo
 
 # Generate the IPs will just invoke an external makefile
 ips:

@@ -6,6 +6,18 @@ This repository puts together all the necessary pieces to generate Limago.
 
 *Before generating any project check each submodule's README.md to verify that everything is set properly*
 
+## Supported Boards
+
+So far only the VCU118 is supported. Please check [README.md](submodules/cmac/README.md) of the CMAC wrapper to verify clock frequency.
+
+## Cloning the repository
+
+This repository uses submodules, so, the safest way to clone is:
+
+```
+git clone git@github.com:hpcn-uam/Limago.git --recursive
+```
+
 ## How to build the projects
 
 The process is fully automated.
@@ -24,7 +36,7 @@ make help
 
 b. Create Project
 ```
-make create_prj_fns-single-toe
+make create_prj_vcu118-fns-single-toe-iperf
 ```
 
 Once the project is create you can open it. The project are create under the folder `project/`
