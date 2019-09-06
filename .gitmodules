@@ -1,0 +1,3 @@
+[submodule "submodules/fpga-network-stack-core"]
+	path = submodules/fpga-network-stack-core
+	url = https://github.com/hpcn-uam/100G-fpga-network-stack-core.git

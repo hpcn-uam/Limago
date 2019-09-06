@@ -10,7 +10,7 @@ vcu118_board 	 = cmac_VCU118_0 cmac_VCU118_1
 
 projects = $(common) $(vcu118_board)
 
-projects : create_project_folder  $(projects)
+projects : patch_example_files create_project_folder  $(projects)
 all: projects
 
 $(projects) : % : $(OBJDIR)/%/component.xml
