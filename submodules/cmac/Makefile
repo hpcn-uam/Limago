@@ -1,0 +1,82 @@
+TOPDIR=$(shell pwd)
+SRCDIR=$(TOPDIR)/src
+OBJDIR=$(TOPDIR)/project
+IPDIR=$(TOPDIR)/scripts/xilinx_ips
+TCLDIR=$(TOPDIR)/scripts
+
+
+common           = cmac_sync
+vcu118_board 	 = cmac_VCU118_0 cmac_VCU118_1
+
+projects = $(common) $(vcu118_board)
+
+projects : create_project_folder  $(projects)
+all: projects
+
+$(projects) : % : $(OBJDIR)/%/component.xml
+	@echo -e "\e[94mIP Completed: $@\e[39m"
+
+vcu118 : create_project_folder $(common) $(vcu118_board)
+$(vcu108) : % : $(OBJDIR)/%/component.xml
+	@echo -e "\e[94mIP Completed: $@\e[39m"
+
+clean:
+	rm -rf vivado*.log vivado*.jou file* *.bak synlog.tcl .Xil fsm_encoding.os
+
+distclean: clean
+	rm -rf $(OBJDIR)
+
+
+create_project_folder:
+	./patch_cmac_files.sh
+	@mkdir -p project
+
+
+patch_example_files: 
+	if [ ! -a $(SRCDIR)/cmac_sync/cmac_0_axi4_lite_user_if.v ]; then ./patch_xilinx_files.sh; fi;
+
+CMAC_DEPENDENCES := $(SRCDIR)/cmac/cmac_connector_wrapper.sv \
+		$(SRCDIR)/cmac/cmac_connector.sv \
+		$(SRCDIR)/cmac/cmac_lbus2axi.v \
+		$(SRCDIR)/cmac/cmac_lbus_aligner.sv \
+		$(SRCDIR)/cmac/cmac_lbus_aligned_2_axi.sv \
+		$(SRCDIR)/cmac/cmac_axi2lbus.sv \
+		$(SRCDIR)/common/types.svh \
+		$(IPDIR)/lbus_fifo.tcl \
+		$(IPDIR)/axi_fifo.tcl
+
+CMAC_UPLUS_DEPENDENCES:= $(TCLDIR)/cmac_uplus_wrapper.tcl \
+		$(SRCDIR)/cmac/cmac_uplus_wrapper.sv \
+		$(IPDIR)/cmac_uplus.tcl
+	
+$(OBJDIR)/cmac_VCU118_%/component.xml: current_objective=$(subst $(OBJDIR)/cmac_VCU118_,,$(subst /component.xml,,$@))
+$(OBJDIR)/cmac_VCU118_%/component.xml: $(CMAC_DEPENDENCES) $(CMAC_UPLUS_DEPENDENCES) create_project_folder
+	rm -rf  $(OBJDIR)/cmac_VCU118_$(current_objective)
+	vivado -notrace -mode batch -source $(TCLDIR)/cmac_uplus_wrapper.tcl -tclargs --origin_dir $(TOPDIR) --integrated_qsfp $(current_objective) --board VCU118
+
+cmac_sync_recursive_dependencies := $(shell find $(SRCDIR)/cmac_sync -print)
+$(OBJDIR)/cmac_sync/component.xml: $(cmac_sync_recursive_dependencies) \
+								   $(TCLDIR)/cmac_sync.tcl \
+								   $(SRCDIR)/common/types.svh \
+								   $(patch_example_files)
+	rm -rf 	$(OBJDIR)/cmac_sync
+	vivado -notrace -mode batch -source $(TCLDIR)/cmac_sync.tcl -tclargs $(TOPDIR)
+
+
+.PHONY: list help create_project_folder patch_example_files
+list:
+	@(make -rpn | sed -n -e '/^$$/ { n ; /^[^ .#][^% ]*:/p ; }' | sort | egrep --color '^[^ ]*:' )
+
+
+help:
+	@echo "Different projects can be created from this Makefile. So be patient and study the different possibilities before getting hands into the project."
+	@echo ""
+	@echo "The basic starting point is getting used to the defined targets. They can be stated with the command:"
+	@echo -e "    \e[94mmake list\e[39m"
+	@echo ""
+	@echo "The basic usage of this makefile is:"
+	@echo -e " 1) Create the IPs"
+	@echo -e "    \e[94mmake $(projects)\e[39m"
+	@echo ""
+	@echo "Remember that you can always review this help with"
+	@echo -e "    \e[94mmake help\e[39m"
