@@ -26,12 +26,13 @@ clean:
 distclean: clean
 	rm -rf $(OBJDIR)
 
-
+.PHONY: create_project_folder
 create_project_folder:
 	./patch_cmac_files.sh
 	@mkdir -p project
 
 
+.PHONY: patch_example_files
 patch_example_files: 
 	if [ ! -f $(SRCDIR)/cmac_sync/cmac_0_axi4_lite_user_if.v ]; then ./patch_xilinx_files.sh; fi;
 
@@ -50,7 +51,7 @@ CMAC_UPLUS_DEPENDENCES:= $(TCLDIR)/cmac_uplus_wrapper.tcl \
 		$(IPDIR)/cmac_uplus.tcl
 	
 $(OBJDIR)/cmac_VCU118_%/component.xml: current_objective=$(subst $(OBJDIR)/cmac_VCU118_,,$(subst /component.xml,,$@))
-$(OBJDIR)/cmac_VCU118_%/component.xml: $(CMAC_DEPENDENCES) $(CMAC_UPLUS_DEPENDENCES) create_project_folder
+$(OBJDIR)/cmac_VCU118_%/component.xml: $(CMAC_DEPENDENCES) $(CMAC_UPLUS_DEPENDENCES) $(create_project_folder)
 	rm -rf  $(OBJDIR)/cmac_VCU118_$(current_objective)
 	vivado -notrace -mode batch -source $(TCLDIR)/cmac_uplus_wrapper.tcl -tclargs --origin_dir $(TOPDIR) --integrated_qsfp $(current_objective) --board VCU118
 
@@ -63,7 +64,7 @@ $(OBJDIR)/cmac_sync/component.xml: $(cmac_sync_recursive_dependencies) \
 	vivado -notrace -mode batch -source $(TCLDIR)/cmac_sync.tcl -tclargs $(TOPDIR)
 
 
-.PHONY: list help create_project_folder patch_example_files
+.PHONY: list help
 list:
 	@(make -rpn | sed -n -e '/^$$/ { n ; /^[^ .#][^% ]*:/p ; }' | sort | egrep --color '^[^ ]*:' )
 
