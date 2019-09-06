@@ -33,7 +33,7 @@ create_project_folder:
 
 
 patch_example_files: 
-	if [ ! -a $(SRCDIR)/cmac_sync/cmac_0_axi4_lite_user_if.v ]; then ./patch_xilinx_files.sh; fi;
+	if [ ! -f $(SRCDIR)/cmac_sync/cmac_0_axi4_lite_user_if.v ]; then ./patch_xilinx_files.sh; fi;
 
 CMAC_DEPENDENCES := $(SRCDIR)/cmac/cmac_connector_wrapper.sv \
 		$(SRCDIR)/cmac/cmac_connector.sv \
