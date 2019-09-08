@@ -6,10 +6,10 @@ source scripts/common_scripts/common_paths.tcl
 
 # Open the project
 puts "Backing up: ${project_name}"
-open_project $project_dir/${project_name}/${project_name}.xpr
+open_project ${project_dir}/${project_name}/${project_name}.xpr
 
 # Open the block design
-open_bd_design $project_dir/${project_name}/${project_name}.srcs/sources_1/bd/bd/bd.bd
+open_bd_design ${project_dir}/${project_name}/${project_name}.srcs/sources_1/bd/bd/bd.bd
 
 #Validate the block design
 validate_bd_design

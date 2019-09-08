@@ -12,7 +12,9 @@ So far only the VCU118 is supported. Please check [README.md](submodules/cmac/RE
 
 ## Cloning the repository
 
-This repository uses submodules, so, the safest way to clone is:
+In order to clone this repository you need `git lfs` installed. 
+
+This repository uses submodules and `git lfs`, check [Installing Git Large File Storage](https://help.github.com/en/articles/installing-git-large-file-storage) to install it.
 
 ```
 git clone git@github.com:hpcn-uam/Limago.git --recursive
@@ -39,16 +41,27 @@ b. Create Project
 make create_prj_vcu118-fns-single-toe-iperf
 ```
 
-Once the project is create you can open it. The project are create under the folder `project/`
+Once the project is create you can open it. The project are create under the folder `project/<project_name>`
+
+For instance you can open the project with Vivado:
+
+```
+vivado project/vcu118-fns-single-toe-iperf/vcu118-fns-single-toe-iperf.xpr
+```
 
 3. Implement project 
+
+You can either launch it manually from the GUI or using the following command:
+
 ```
-make implement_prj_fns-single-toe
+make implement_prj_vcu118-fns-single-toe-iperf
 ```
+
+*It is recommended to close the GUI when launching this command.*
 
 
 ## Citation
-If you use the TCP/IP stack or the checksum computation in your project please cite one of the following papers and/or link to the github project:
+If you use Limago, the [TCP/IP stack](https://github.com/hpcn-uam/100G-fpga-network-stack-core) or the [checksum computation](https://github.com/hpcn-uam/efficient_checksum-offload-engine) in your project please cite one of the following papers and/or link to the github project:
 
 ```
 @inproceedings{sutter2018fpga,

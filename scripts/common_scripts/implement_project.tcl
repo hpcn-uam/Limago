@@ -5,7 +5,7 @@ set  project_name [lindex $argv 0]
 source scripts/common_scripts/common_paths.tcl
 
 # Open the project
-open_project $project_dir/${project_name}/${project_name}.xpr
+open_project ${project_dir}/${project_name}/${project_name}.xpr
 
 
 set project_status [get_property STATUS [get_runs impl_1]]

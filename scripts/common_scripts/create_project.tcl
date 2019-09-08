@@ -17,8 +17,8 @@ create_bd_design "bd"
 
 
 #Add modules from RTL
-add_files $src_dir/
-add_files $submodules_ip_dir/fpga-network-stack-core/RTL
+add_files ${src_dir}/
+add_files ${submodules_ip_dir}/fpga-network-stack-core/RTL
 
 # Refresh the  hierarchy
 set_property source_mgmt_mode All [current_project]
@@ -30,8 +30,8 @@ source ./scripts/${project_name}/extra_files.tcl -quiet
 source ./scripts/${project_name}/block_design.tcl
 
 # Add Contraints files
-add_files -fileset constrs_1 -norecurse $constraints_dir/vcu118_pinout.xdc
-add_files -fileset constrs_1 -norecurse $constraints_dir/vcu118_timing.xdc
+add_files -fileset constrs_1 -norecurse ${constraints_dir}/vcu118_pinout.xdc
+add_files -fileset constrs_1 -norecurse ${constraints_dir}/vcu118_timing.xdc
     
 set_property -name {STEPS.SYNTH_DESIGN.ARGS.MORE OPTIONS} -value {-verilog_define ULTRASCALE_PLUS} -objects [get_runs synth_1]
 set_property verilog_define ULTRASCALE_PLUS [get_filesets sources_1]
