@@ -6,8 +6,20 @@ source scripts/common_scripts/common_paths.tcl
 
 # Create the project and specify the board
 
-create_project ${project_name} ${project_dir}/${project_name} -part xcvu9p-flga2104-2L-e -force
-set_property board_part xilinx.com:vcu118:part0:2.0 [current_project]
+
+if {[string first "vcu118" ${project_name}] == 0} {
+	set fpga_part "xcvu9p-flga2104-2L-e"
+	set fpga_board "xilinx.com:vcu118:part0:2.0"  
+} elseif {[string first "alveou200" ${project_name}] == 0} {
+	set fpga_part "xcu200-fsgd2104-2-e"
+	set fpga_board "xilinx.com:au200:part0:1.0"  
+} else {
+	puts "The project ${project_name} does not have associated constraint(s)"
+	exit
+}
+
+create_project ${project_name} ${project_dir}/${project_name} -part ${fpga_part} -force
+set_property board_part ${fpga_board} [current_project]
 
 #Adding the ip path to the project
 set_property  ip_repo_paths  "$submodules_ip_dir" [current_project]
@@ -30,8 +42,16 @@ source ./scripts/${project_name}/extra_files.tcl -quiet
 source ./scripts/${project_name}/block_design.tcl
 
 # Add Contraints files
-add_files -fileset constrs_1 -norecurse ${constraints_dir}/vcu118_pinout.xdc
-add_files -fileset constrs_1 -norecurse ${constraints_dir}/vcu118_timing.xdc
+if {[string first "vcu118" ${project_name}] == 0} {
+	add_files -fileset constrs_1 -norecurse ${constraints_dir}/vcu118_pinout.xdc
+	add_files -fileset constrs_1 -norecurse ${constraints_dir}/vcu118_timing.xdc
+} elseif {[string first "alveou200" ${project_name}] == 0} {
+	add_files -fileset constrs_1 -norecurse ${constraints_dir}/alveou200_pinout.xdc
+	add_files -fileset constrs_1 -norecurse ${constraints_dir}/alveou200_timing.xdc
+} else {
+	puts "The project ${project_name} does not have associated constraint(s)"
+}
+
     
 set_property -name {STEPS.SYNTH_DESIGN.ARGS.MORE OPTIONS} -value {-verilog_define ULTRASCALE_PLUS} -objects [get_runs synth_1]
 set_property verilog_define ULTRASCALE_PLUS [get_filesets sources_1]

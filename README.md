@@ -8,7 +8,10 @@ This repository puts together all the necessary pieces to generate Limago.
 
 ## Supported Boards
 
-So far only the VCU118 is supported. Please check [README.md](submodules/cmac/README.md) of the CMAC wrapper to verify clock frequency.
+So far VCU118 and ALVEO-U200 are supported. 
+
+- Please check [README.md](submodules/cmac/README.md) of the CMAC wrapper to verify clock frequency for VCU118.
+- The clock Frequency of the Alveo U200 can be configured using two pins, and the project already supports it.
 
 ## Cloning the repository
 
@@ -41,9 +44,9 @@ b. Create Project
 make create_prj_vcu118-fns-single-toe-iperf
 ```
 
-Once the project is create you can open it. The project are create under the folder `project/<project_name>`
+Once the project is create you can open it. The projects are created under the folder `project/<project_name>`
 
-For instance you can open the project with Vivado:
+For instance, you can open the project with Vivado:
 
 ```
 vivado project/vcu118-fns-single-toe-iperf/vcu118-fns-single-toe-iperf.xpr
@@ -57,11 +60,11 @@ You can either launch it manually from the GUI or using the following command:
 make implement_prj_vcu118-fns-single-toe-iperf
 ```
 
-*It is recommended to close the GUI when launching this command.*
+*It is suggested to close the GUI when launching this command.*
 
 
 ## Citation
-If you use Limago, the [TCP/IP stack](https://github.com/hpcn-uam/100G-fpga-network-stack-core) or the [checksum computation](https://github.com/hpcn-uam/efficient_checksum-offload-engine) in your project please cite one of the following papers and/or link to the github project:
+If you use [Limago](https://ieeexplore.ieee.org/document/8891991), the [TCP/IP stack](https://github.com/hpcn-uam/100G-fpga-network-stack-core) or the [checksum computation](https://github.com/hpcn-uam/efficient_checksum-offload-engine) in your project please cite one of the following papers and/or link to the github project:
 
 ```
 @inproceedings{sutter2018fpga,
@@ -77,11 +80,13 @@ If you use Limago, the [TCP/IP stack](https://github.com/hpcn-uam/100G-fpga-netw
 @INPROCEEDINGS{ruiz2019tcp, 
     title={{Limago: an FPGA-based Open-source 100~GbE TCP/IP Stack}}, 
     author={Ruiz, Mario and Sidler, David and Sutter, Gustavo and Alonso, Gustavo and L{\'o}pez-Buedo, Sergio},
-    booktitle={Field Programmable Logic and Applications (FPL), 2019 29th International Conference on},
+    booktitle={{2019 29th International Conference on Field Programmable Logic and Applications (FPL)}}, 
     year={2019},
     month={Sep},
+    pages={286-292}, 
     organization={IEEE},
-    doi={},
+    doi={10.1109/FPL.2019.00053},
+    ISSN={1946-147X}, 
 }
 ```
 
@@ -90,7 +95,7 @@ If you use Limago, the [TCP/IP stack](https://github.com/hpcn-uam/100G-fpga-netw
 This is a collaborative project between: 
 - HPCN group of the  Universidad Autónoma de Madrid. [web](http://www.hpcn-uam.es/)
 - The spin-off Naudit HPCN. [web](http://www.naudit.es/en/)
-- Systems Group of  ETH Zürich University. [web](https://www.systems.ethz.ch/)
+- Systems Group of ETH Zürich University. [web](https://www.systems.ethz.ch/)
 
 So far these people have contributed to Limago
 - José Fernando Zazo josefernando.zazo@naudit.es
