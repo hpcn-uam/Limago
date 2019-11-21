@@ -1,4 +1,5 @@
 # Default GT reference frequency
+set gt_ref_clk 161.1328125
 if {$use_board eq "VCU118"} {
     switch $integrated_interface {
         "1" {
@@ -12,6 +13,21 @@ if {$use_board eq "VCU118"} {
             set interface_number 0
         }
     } 
+} elseif {$use_board eq "ALVEO-U200"} {
+    switch $integrated_interface {
+        "1" {
+            # Possible core_selection CMACE4_X0Y6 and CMACE4_X0Y7
+            set core_selection  CMACE4_X0Y6
+            set group_selection X1Y44~X1Y47
+            set interface_number 1
+        }
+        default {
+            # Possible core_selection CMACE4_X0Y6; CMACE4_X0Y7 and CMACE4_X0Y8
+            set core_selection  CMACE4_X0Y8
+            set group_selection X1Y48~X1Y51
+            set interface_number 0
+        }
+    }
 } else {
     puts "Board unknown"
     return -1
@@ -33,7 +49,7 @@ create_ip -name cmac_usplus -vendor xilinx.com -library ip -module_name ${cmac_n
 set_property -dict [list \
     CONFIG.CMAC_CAUI4_MODE           {1} \
     CONFIG.NUM_LANES                 {4} \
-    CONFIG.GT_REF_CLK_FREQ           {161.1328125} \
+    CONFIG.GT_REF_CLK_FREQ           $gt_ref_clk \
     CONFIG.CMAC_CORE_SELECT          $core_selection \
     CONFIG.GT_GROUP_SELECT           $group_selection \
     CONFIG.INCLUDE_SHARED_LOGIC      {2} \

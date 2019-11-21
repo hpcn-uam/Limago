@@ -5,10 +5,11 @@ IPDIR=$(TOPDIR)/scripts/xilinx_ips
 TCLDIR=$(TOPDIR)/scripts
 
 
-common           = cmac_sync
-vcu118_board 	 = cmac_VCU118_0 cmac_VCU118_1
+common           	= cmac_sync
+vcu118_board 	 	= cmac_VCU118_0 cmac_VCU118_1
+alveou200_board 	= cmac_ALVEOu200_0 cmac_ALVEOu200_1
 
-projects = $(common) $(vcu118_board)
+projects = $(common) $(vcu118_board) $(alveou200_board)
 
 projects : patch_example_files create_project_folder  $(projects)
 all: projects
@@ -18,6 +19,10 @@ $(projects) : % : $(OBJDIR)/%/component.xml
 
 vcu118 : create_project_folder $(common) $(vcu118_board)
 $(vcu108) : % : $(OBJDIR)/%/component.xml
+	@echo -e "\e[94mIP Completed: $@\e[39m"
+
+alveou200 : create_project_folder $(common) $(alveou200_board)
+$(alveou200) : % : $(OBJDIR)/%/component.xml
 	@echo -e "\e[94mIP Completed: $@\e[39m"
 
 clean:
@@ -54,6 +59,13 @@ $(OBJDIR)/cmac_VCU118_%/component.xml: current_objective=$(subst $(OBJDIR)/cmac_
 $(OBJDIR)/cmac_VCU118_%/component.xml: $(CMAC_DEPENDENCES) $(CMAC_UPLUS_DEPENDENCES) $(create_project_folder)
 	rm -rf  $(OBJDIR)/cmac_VCU118_$(current_objective)
 	vivado -notrace -mode batch -source $(TCLDIR)/cmac_uplus_wrapper.tcl -tclargs --origin_dir $(TOPDIR) --integrated_qsfp $(current_objective) --board VCU118
+
+
+$(OBJDIR)/cmac_ALVEOu200_%/component.xml: current_objective=$(subst $(OBJDIR)/cmac_ALVEOu200_,,$(subst /component.xml,,$@))
+$(OBJDIR)/cmac_ALVEOu200_%/component.xml: $(CMAC_DEPENDENCES) $(CMAC_UPLUS_DEPENDENCES)
+	rm -rf  $(OBJDIR)/cmac_ALVEO_$(current_objective)
+	vivado -notrace -mode batch -source $(TCLDIR)/cmac_uplus_wrapper.tcl -tclargs --origin_dir $(TOPDIR) --integrated_qsfp $(current_objective) --board ALVEO-U200
+
 
 cmac_sync_recursive_dependencies := $(shell find $(SRCDIR)/cmac_sync -print)
 $(OBJDIR)/cmac_sync/component.xml: $(cmac_sync_recursive_dependencies) \

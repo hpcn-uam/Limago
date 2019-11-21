@@ -74,6 +74,13 @@ if {$use_board eq "VCU118"} {
   set core_name "cmac_VCU118_${integrated_interface}"
   set constraint_name "vcu118_qsfp${integrated_interface}"
 
+} elseif {$use_board eq "ALVEO-U200"} {
+  set fpga_part "xcu200-fsgd2104-2-e"
+  set fpga_board "xilinx.com:au200:part0:1.0"  
+
+  set core_name "cmac_ALVEOu200_${integrated_interface}"
+  set constraint_name "alveou200_qsfp${integrated_interface}"
+
 } else {
     puts "ERROR: Board Unknown.\n"
     return -1
