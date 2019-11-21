@@ -1108,8 +1108,10 @@ proc create_hier_cell_ARP { parentCell nameHier } {
   # Create pins
   create_bd_pin -dir I -type clk cmac_rx_clk
   create_bd_pin -dir O -from 191 -to 0 debug_slot
+  create_bd_pin -dir I -from 31 -to 0 -type data gatewayIP
   create_bd_pin -dir I -from 31 -to 0 -type data myIpAddress_V
   create_bd_pin -dir I -from 47 -to 0 -type data myMacAddress_V
+  create_bd_pin -dir I -from 31 -to 0 -type data networkMask
   create_bd_pin -dir I -type rst p_arst_n_rx_322
   create_bd_pin -dir I -type rst user_rst_n
 
@@ -1172,6 +1174,8 @@ proc create_hier_cell_ARP { parentCell nameHier } {
   connect_bd_net -net cmac_tx_clk_1 [get_bd_pins cmac_rx_clk] [get_bd_pins arp_in_slice/aclk] [get_bd_pins arp_out_slice/aclk] [get_bd_pins arp_server_0/ap_clk] [get_bd_pins bandwith_reg_0/S_AXI_ACLK]
   connect_bd_net -net fix_settings_0_my_ip_address [get_bd_pins myIpAddress_V] [get_bd_pins arp_server_0/myIpAddress_V]
   connect_bd_net -net fix_settings_0_my_mac [get_bd_pins myMacAddress_V] [get_bd_pins arp_server_0/myMacAddress_V]
+  connect_bd_net -net gatewayIP_V_1 [get_bd_pins gatewayIP] [get_bd_pins arp_server_0/gatewayIP_V]
+  connect_bd_net -net networkMask_V_1 [get_bd_pins networkMask] [get_bd_pins arp_server_0/networkMask_V]
   connect_bd_net -net p_arst_n_tx_322_1 [get_bd_pins p_arst_n_rx_322] [get_bd_pins arp_in_slice/aresetn] [get_bd_pins arp_out_slice/aresetn] [get_bd_pins arp_server_0/ap_rst_n] [get_bd_pins bandwith_reg_0/S_AXI_ARESETN]
   connect_bd_net -net reg_debug_0_user_rst_n [get_bd_pins user_rst_n] [get_bd_pins bandwith_reg_0/user_rst_n]
 
@@ -1382,8 +1386,8 @@ proc create_hier_cell_interface_0_handler { parentCell nameHier } {
   connect_bd_net -net cmac_tx_clk_1 [get_bd_pins cmac_if0_tx_clk] [get_bd_pins Traffic_Agregation/cmac_tx_clk]
   connect_bd_net -net fix_settings_0_my_ip_address [get_bd_pins ARP/myIpAddress_V] [get_bd_pins ICMP_HANDLER/myIpAddress_V] [get_bd_pins TCP/myIpAddress_V] [get_bd_pins interface_settings_0/my_ip_address]
   connect_bd_net -net fix_settings_0_my_mac [get_bd_pins ARP/myMacAddress_V] [get_bd_pins Traffic_Agregation/myMacAddress_V] [get_bd_pins interface_settings_0/my_mac]
-  connect_bd_net -net interface_settings_0_my_gateway [get_bd_pins Traffic_Agregation/regDefaultGateway_V] [get_bd_pins interface_settings_0/my_gateway]
-  connect_bd_net -net interface_settings_0_my_ip_subnet_mask [get_bd_pins Traffic_Agregation/regSubNetMask_V] [get_bd_pins interface_settings_0/my_ip_subnet_mask]
+  connect_bd_net -net interface_settings_0_my_gateway [get_bd_pins ARP/gatewayIP] [get_bd_pins Traffic_Agregation/regDefaultGateway_V] [get_bd_pins interface_settings_0/my_gateway]
+  connect_bd_net -net interface_settings_0_my_ip_subnet_mask [get_bd_pins ARP/networkMask] [get_bd_pins Traffic_Agregation/regSubNetMask_V] [get_bd_pins interface_settings_0/my_ip_subnet_mask]
   connect_bd_net -net p_arst_n_322_1 [get_bd_pins p_arst_n_rx_322] [get_bd_pins ARP/p_arst_n_rx_322] [get_bd_pins ICMP_HANDLER/p_arst_n_rx_322] [get_bd_pins TCP/p_arst_n_rx_322] [get_bd_pins Traffic_Agregation/p_arst_n_rx_322] [get_bd_pins Traffic_Identification/p_arst_n_rx_322] [get_bd_pins interface_settings_0/S_AXI_ARESETN] [get_bd_pins performance_debug_reg_0/S_AXI_ARESETN]
   connect_bd_net -net p_arst_n_tx_322_1 [get_bd_pins p_arst_n_tx_322] [get_bd_pins Traffic_Agregation/p_arst_n_tx_322]
   connect_bd_net -net reg_debug_0_user_rst_n_1 [get_bd_pins ARP/user_rst_n] [get_bd_pins ICMP_HANDLER/user_rst_n] [get_bd_pins TCP/user_rst_n] [get_bd_pins Traffic_Agregation/user_rst_n] [get_bd_pins Traffic_Identification/user_rst_n] [get_bd_pins performance_debug_reg_0/user_rst_n]
