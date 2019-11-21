@@ -1,4 +1,4 @@
-set project_dir 	  "[file normalize "./project"]"
+set project_dir 	  "[file normalize "./projects"]"
 set tcl_dir 		  "[file normalize "./scripts/generate_ips/individual_ips"]"
 set tcl_bd_dir 		  "[file normalize "./scripts/generate_ips/bd"]"
 set ip_dir 			  "[file normalize "./project/ips"]"

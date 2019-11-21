@@ -44,15 +44,15 @@ b. Create Project
 make create_prj_vcu118-fns-single-toe-iperf
 ```
 
-Once the project is create you can open it. The projects are created under the folder `project/<project_name>`
+Once the project is create you can open it. The projects are created under the folder `projects/<project_name>`
 
 For instance, you can open the project with Vivado:
 
 ```
-vivado project/vcu118-fns-single-toe-iperf/vcu118-fns-single-toe-iperf.xpr
+vivado projects/vcu118-fns-single-toe-iperf/vcu118-fns-single-toe-iperf.xpr
 ```
 
-3. Implement project 
+3. Implement a project 
 
 You can either launch it manually from the GUI or using the following command:
 
@@ -64,7 +64,7 @@ make implement_prj_vcu118-fns-single-toe-iperf
 
 
 ## Citation
-If you use [Limago](https://ieeexplore.ieee.org/document/8891991), the [TCP/IP stack](https://github.com/hpcn-uam/100G-fpga-network-stack-core) or the [checksum computation](https://github.com/hpcn-uam/efficient_checksum-offload-engine) in your project please cite one of the following papers and/or link to the github project:
+If you use [Limago](https://ieeexplore.ieee.org/document/8891991), the [TCP/IP stack](https://github.com/hpcn-uam/100G-fpga-network-stack-core) or the [checksum computation](https://github.com/hpcn-uam/efficient_checksum-offload-engine) in your project please cite one of the following papers accordingly and/or link to the GitHub repository:
 
 ```
 @inproceedings{sutter2018fpga,
