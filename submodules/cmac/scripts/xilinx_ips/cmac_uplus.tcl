@@ -28,8 +28,23 @@ if {$use_board eq "VCU118"} {
             set interface_number 0
         }
     }
+} elseif {$use_board eq "ALVEO-U280"} {
+    switch $integrated_interface {
+        "1" {
+            # Possible core_selection CMACE4_X0Y6 and CMACE4_X0Y7
+            set core_selection  CMACE4_X0Y6
+            set group_selection X0Y44~X0Y47
+            set interface_number 1
+        }
+        default {
+            # Possible core_selection CMACE4_X0Y5; CMACE4_X0Y6 and CMACE4_X0Y7
+            set core_selection  CMACE4_X0Y5
+            set group_selection X0Y40~X0Y43
+            set interface_number 0
+        }
+    }
 } else {
-    puts "Board unknown"
+    puts "unknown Board"
     return -1
 }
 
