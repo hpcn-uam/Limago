@@ -50,6 +50,7 @@ void usage(void) {
     printf("     -h       : It shows help\n");
     printf("     -a       : Address of the slave\n");
     printf("     -p <val> : Shows statistics of a particular port\n");
+    printf("     -g <val> : Shows statistics of a range of ports starting from <val>\n");
     printf("     -r       : Reset statistics\n");
     printf("\n");
 }
@@ -77,7 +78,7 @@ void read_show_statistics (uint32_t base_address, uint32_t port, long double per
       printf("| Bytes that went through  : %'20lu |\n", measured_bytes);
       printf("| Measured time            : %'16.3Lf  ms |\n", (long double) (period * measured_cycles)/1000000.0);
       printf("---------------------------------------------------\n");
-      printf("|             Bandwidth: %03.3Lf Gb/s              |\n",bandwidth);
+      printf("|             Bandwidth: %6.3Lf Gb/s              |\n",bandwidth);
       printf("---------------------------------------------------\n");
 
     }
@@ -101,21 +102,19 @@ int main(int argc, char **argv) {
   int      read_specific_port = -1;
   int      reset_statistics = -1;
 
-  uint64_t pkts_dropped;
-  uint64_t pkt_duplicates;
-
   uint32_t  number_port;
   uint32_t  debug_name;
   uint32_t  clock_frequency;
 
   long double period;
   int i;
+  int startPort=0;
   
 
 
   if (argc > 1 ) {
     /* Parse command line arguements */
-    while((opt = getopt(argc, argv, "a:p:rh")) != EOF) {
+    while((opt = getopt(argc, argv, "a:p:g:rh")) != EOF) {
       switch(opt) {
         case 'a':
           base_address = etoi(optarg);      // convert any input format to a unique format
@@ -130,6 +129,9 @@ int main(int argc, char **argv) {
           return 0;
         case 'p':
           read_specific_port = (uint32_t) atoi(optarg);
+          break;  
+        case 'g':
+          startPort = (uint32_t) atoi(optarg);
           break;  
         case 'r':
           reset_statistics = 1;
@@ -162,7 +164,7 @@ int main(int argc, char **argv) {
   debug_name = readWord(base_address, PERFORMANCE_DEBUG_NAME);
   setlocale(LC_NUMERIC, "");
   printf("***************************************************\n");
-  printf("************ Debug statistics 0x%4X **************\n", (base_address & 0xFFFF));
+  printf("******* Debug Statistics Address 0x%06X *********\n", (base_address & 0xFFFFF));
 
   if ( debug_name == 0xADACED){
     number_port     = readWord(base_address, PERFORMANCE_DEBUG_NUMBER_PORTS         );
@@ -180,9 +182,9 @@ int main(int argc, char **argv) {
       }
     }
     else{
-      printf("The design has %2d port(s), only those with data are shown\n",number_port);
+      printf("The design has %2d port(s).\nOnly those with data are shown. Starting from P: %2u\n",number_port,startPort);
       writeWord (base_address , PERFORMANCE_DEBUG_HOLD_VALUES, 0x3F);   // Hold statistics to read consistent data
-      for (i=0 ; i < number_port ; i++){
+      for (i = startPort; i < number_port ; i++){
         read_show_statistics(base_address,i,period,0);
       }
     }
