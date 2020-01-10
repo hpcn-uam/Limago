@@ -7,7 +7,6 @@ This repository puts together all the necessary pieces to generate Limago.
 *Before generating any project check each submodule's README.md to verify that everything is set properly*
 
 ## Supported Boards
-
 So far VCU118 and ALVEO-U200 are supported. 
 
 - Please check [README.md](submodules/cmac/README.md) of the CMAC wrapper to verify clock frequency for VCU118.
@@ -24,6 +23,9 @@ git clone git@github.com:hpcn-uam/Limago.git --recursive
 ```
 
 ## How to build the projects
+
+<details>
+<summary>Click to show</summary>
 
 The process is fully automated.
 
@@ -62,6 +64,73 @@ make implement_prj_vcu118-fns-single-toe-iperf
 
 *It is suggested to close the GUI when launching this command.*
 
+</details>
+
+## How to test if the design works
+
+<details>
+<summary>Click to show</summary>
+
+### Check Physical Link
+
+Once the FPGA has been programmed you can check if the link is up using the VIO (vio\_cmac\_synq\_0) within `Interfaces` hierarchy , the signal `cmac_sync_0_cmac_aligned_sync` must value '1'. 
+
+![vioLink](images/vioLink.jpg)
+ 
+If the board is attached through PCIe, the link can be checked using the `cmac_stats` program within the [Software](Software/) folder. In order to perform this, after programming the FPGA a host reboot is mandatory so as to enumerate the PCIe devices to detect the XDMA (PCIe rescan has not been tested). Check [README.md](Software/README.md) to download and install the driver. Execute `cmac_stats` and you will get the stats of the CMAC and the Tx and Rx status.
+
+![cmacStats](images/cmacStats.jpg)
+
+### Check Network Link
+
+By default Limago IP address is 192.168.0.5, network mask 255.255.255.0 and its MAC address is 00:0a:35:02:9d:e5
+
+Once you have configured your HOST with a proper IP address in the same subnetwork as Limago you can use `arping` and `ping` to reach Limago.
+
+```
+arping -I <interface_name> 192.168.0.5
+ping 192.168.0.5
+```
+
+![arping](images/arping.png)
+
+![ping](images/ping.png)
+
+### Check application
+
+#### Echo application
+
+This section describes how to test the echo application, valid for the project(s): `vcu118-fns-single-toe-echo` 
+
+In this case the Limago only echoes the payload of the connection to the port 15000, therefore you can use `telnet` or `ncat` to test it.
+
+![echoing](images/echo.gif)
+
+#### Iperf2 application
+
+This section describes how to test the `iperf` (version 2) application, valid for the project(s): `vcu118-fns-single-toe-iperf` and `alveou200-fns-single-toe-iperf`
+
+In this case, the FPGA can work both as a client and as a server. Make sure that you have installed `iperf` (version 2) in the server machine.
+
+- FPGA as a server, which means the FPGA just gets data. By default the FPGA is listening to the range of ports between 5000 to 5063, therefore you can target any of those ports. Run the following code in the server with the NIC connected to Limago.
+
+```
+iperf -c 192.168.0.5 -t 10 -i 1 -p 5011 --mss 1408 -e
+```
+
+![hwServer](images/iperfClient.png)
+
+- FPGA as a client, which means Limago opens the TCP connection and sends the data. Therefore, the HOST machine needs to communicate with Limago using the XDMA driver. Run the following code in the HOST machine attached to the FPGA: 
+
+First of all, the server machine must run `iperf` (version 2) a as server `iperf -s -i 1`. After that, you you can run the iperf application from the FPGA as a client.
+
+```
+sudo ./bin/hw_iperf2 -c <server_ip_address> -t 10 -p 5001 -e
+```
+
+![hwClient](images/iperfServer.png)
+
+</details>
 
 ## Citation
 If you use [Limago](https://ieeexplore.ieee.org/document/8891991), the [TCP/IP stack](https://github.com/hpcn-uam/100G-fpga-network-stack-core) or the [checksum computation](https://github.com/hpcn-uam/efficient_checksum-offload-engine) in your project please cite one of the following papers accordingly and/or link to the GitHub repository:
