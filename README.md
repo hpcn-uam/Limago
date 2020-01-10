@@ -7,7 +7,7 @@ This repository puts together all the necessary pieces to generate Limago.
 *Before generating any project check each submodule's README.md to verify that everything is set properly*
 
 ## Supported Boards
-So far VCU118 and ALVEO-U200 are supported. 
+So far [VCU118](https://www.xilinx.com/products/boards-and-kits/vcu118.html#hardware) and [Alveo U200](https://www.xilinx.com/products/boards-and-kits/alveo/u200.html#specifications) are supported. 
 
 - Please check [README.md](submodules/cmac/README.md) of the CMAC wrapper to verify clock frequency for VCU118.
 - The clock Frequency of the Alveo U200 can be configured using two pins, and the project already supports it.
