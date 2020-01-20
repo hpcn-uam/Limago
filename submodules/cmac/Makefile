@@ -10,7 +10,7 @@ vcu118_board 	 	= cmac_VCU118_0 cmac_VCU118_1
 alveou200_board 	= cmac_ALVEOu200_0 cmac_ALVEOu200_1
 alveou280_board 	= cmac_ALVEOu280_0 cmac_ALVEOu280_1
 
-projects = $(common) $(vcu118_board) $(alveou200_board)
+projects = $(common) $(vcu118_board) $(alveou200_board) $(alveou280_board)
 
 projects : patch_example_files create_project_folder  $(projects)
 all: projects

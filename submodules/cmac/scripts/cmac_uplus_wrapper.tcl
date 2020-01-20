@@ -140,7 +140,7 @@ ipx::add_bus_parameter FREQ_HZ [ipx::get_bus_interfaces usr_rx_clk -of_objects [
 set_property value 322265625 [ipx::get_bus_parameters FREQ_HZ -of_objects [ipx::get_bus_interfaces usr_tx_clk -of_objects [ipx::current_core]]]
 set_property value 322265625 [ipx::get_bus_parameters FREQ_HZ -of_objects [ipx::get_bus_interfaces usr_rx_clk -of_objects [ipx::current_core]]]
 
-set_property supported_families {virtexuplus Pre-Production} [ipx::current_core]
+set_property supported_families {virtexuplus Pre-Production virtexuplusHBM Beta} [ipx::current_core]
 
 set_property range 0x1000 [ipx::get_address_blocks reg0 -of_objects [ipx::get_memory_maps s_axi4_lite -of_objects [ipx::current_core]]]
 
