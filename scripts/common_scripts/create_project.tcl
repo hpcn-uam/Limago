@@ -13,6 +13,9 @@ if {[string first "vcu118" ${project_name}] == 0} {
 } elseif {[string first "alveou200" ${project_name}] == 0} {
 	set fpga_part "xcu200-fsgd2104-2-e"
 	set fpga_board "xilinx.com:au200:part0:1.0"  
+} elseif {[string first "alveou280" ${project_name}] == 0} {
+	set fpga_part "xcu280-fsvh2892-2L-e"
+	set fpga_board "xilinx.com:au280:part0:1.1" 
 } else {
 	puts "The project ${project_name} does not have associated constraint(s)"
 	exit
@@ -48,6 +51,9 @@ if {[string first "vcu118" ${project_name}] == 0} {
 } elseif {[string first "alveou200" ${project_name}] == 0} {
 	add_files -fileset constrs_1 -norecurse ${constraints_dir}/alveou200_pinout.xdc
 	add_files -fileset constrs_1 -norecurse ${constraints_dir}/alveou200_timing.xdc
+} elseif {[string first "alveou280" ${project_name}] == 0} {
+	add_files -fileset constrs_1 -norecurse ${constraints_dir}/alveou280_pinout.xdc
+	add_files -fileset constrs_1 -norecurse ${constraints_dir}/alveou280_timing.xdc	
 } else {
 	puts "The project ${project_name} does not have associated constraint(s)"
 }

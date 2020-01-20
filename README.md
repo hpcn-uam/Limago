@@ -4,13 +4,22 @@
 
 This repository puts together all the necessary pieces to generate Limago.
 
+Make sure you are using `Vivado 2018.3 IP Build 2404404`. It seems to be a bug in Vivado 2018.3.1 IP Build 2486929 that produces convinational loops in the synthetized HLS. 
+
 *Before generating any project check each submodule's README.md to verify that everything is set properly*
 
 ## Supported Boards
+
 So far [VCU118](https://www.xilinx.com/products/boards-and-kits/vcu118.html#hardware) and [Alveo U200](https://www.xilinx.com/products/boards-and-kits/alveo/u200.html#specifications) are supported. 
 
 - Please check [README.md](submodules/cmac/README.md) of the CMAC wrapper to verify clock frequency for VCU118.
 - The clock Frequency of the Alveo U200 can be configured using two pins, and the project already supports it.
+
+In order to support Alveo U280 you must change the part for the HLS designs, run 
+
+```
+cd submodules/fpga-network-stack-core/scripts; sed -i 's/xcvu9p-flga2104-2l-e/xcu280-fsvh2892-2L-e/g' $(ls); cd -
+```
 
 ## Cloning the repository
 
