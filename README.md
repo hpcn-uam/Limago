@@ -4,7 +4,7 @@
 
 This repository puts together all the necessary pieces to generate Limago.
 
-Make sure you are using `Vivado 2018.3 IP Build 2404404`. It seems to be a bug in Vivado 2018.3.1 IP Build 2486929 that produces convinational loops in the synthetized HLS. 
+Make sure you are using `Vivado 2018.3 IP Build 2404404`. It seems to be a bug in Vivado 2018.3.1 IP Build 2486929 that produces combinational loops in the synthesized HLS. 
 
 *Before generating any project check each submodule's README.md to verify that everything is set properly*
 
