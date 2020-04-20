@@ -131,11 +131,11 @@ set bCheckIPsPassed 1
 set bCheckIPs 1
 if { $bCheckIPs == 1 } {
    set list_check_ips "\ 
+xilinx.com:ip:xlconstant:1.1\
 xilinx.com:ip:smartconnect:1.0\
 naudit:cmac:cmac_sync:1\
 naudit:cmac:cmac_ALVEOu280_0:1\
 xilinx.com:ip:vio:3.0\
-xilinx.com:ip:xlconstant:1.1\
 xilinx.com:ip:axi_register_slice:2.1\
 xilinx.com:ip:jtag_axi:1.2\
 xilinx.com:ip:util_ds_buf:2.1\
@@ -1525,7 +1525,26 @@ proc create_hier_cell_Memory_Mapped { parentCell nameHier } {
   # Create instance: xdma_0, and set properties
   set xdma_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:xdma:4.1 xdma_0 ]
   set_property -dict [ list \
+   CONFIG.PCIE_BOARD_INTERFACE {pci_express_x1} \
+   CONFIG.PF0_DEVICE_ID_mqdma {9011} \
+   CONFIG.PF2_DEVICE_ID_mqdma {9011} \
+   CONFIG.PF3_DEVICE_ID_mqdma {9011} \
+   CONFIG.axi_data_width {64_bit} \
+   CONFIG.axilite_master_en {true} \
+   CONFIG.axilite_master_size {8} \
+   CONFIG.axisten_freq {250} \
+   CONFIG.cfg_mgmt_if {false} \
+   CONFIG.coreclk_freq {250} \
+   CONFIG.en_gt_selection {true} \
+   CONFIG.mode_selection {Advanced} \
    CONFIG.pcie_blk_locn {PCIE4C_X1Y0} \
+   CONFIG.pf0_device_id {9011} \
+   CONFIG.pf0_msi_enabled {false} \
+   CONFIG.pf0_msix_cap_pba_bir {BAR_1} \
+   CONFIG.pf0_msix_cap_table_bir {BAR_1} \
+   CONFIG.pl_link_cap_max_link_speed {2.5_GT/s} \
+   CONFIG.pl_link_cap_max_link_width {X1} \
+   CONFIG.plltype {CPLL} \
    CONFIG.xdma_axi_intf_mm {AXI_Stream} \
    CONFIG.xlnx_ref_board {AU280} \
  ] $xdma_0
@@ -1547,6 +1566,7 @@ proc create_hier_cell_Memory_Mapped { parentCell nameHier } {
   connect_bd_intf_net -intf_net axi_interconnect_0_M01_AXI [get_bd_intf_pins IF_SETTINGS] [get_bd_intf_pins axi_interconnect_0/M01_AXI]
   connect_bd_intf_net -intf_net axi_interconnect_0_M03_AXI [get_bd_intf_pins IPERF_CONF] [get_bd_intf_pins axi_interconnect_0/M03_AXI]
   connect_bd_intf_net -intf_net xdma_0_M_AXIS_H2C_0 [get_bd_intf_pins dma_sinker/S_AXIS] [get_bd_intf_pins xdma_0/M_AXIS_H2C_0]
+  connect_bd_intf_net -intf_net xdma_0_M_AXI_LITE [get_bd_intf_pins axi_register_slice_0/S_AXI] [get_bd_intf_pins xdma_0/M_AXI_LITE]
 
   # Create port connections
   connect_bd_net -net CMAC_CLK_1 [get_bd_pins cmac_if0_rx_clk] [get_bd_pins axi_interconnect_0/M01_ACLK] [get_bd_pins axi_interconnect_0/M02_ACLK] [get_bd_pins axi_interconnect_0/M03_ACLK]
@@ -1763,6 +1783,7 @@ proc create_root_design { parentCell } {
  ] $cmac_if0_rx_clk
   set cmac_if0_rx_rst_n [ create_bd_port -dir O -from 0 -to 0 -type rst cmac_if0_rx_rst_n ]
   set pcie_rst_n [ create_bd_port -dir I pcie_rst_n ]
+  set sc_temp_control [ create_bd_port -dir O -from 0 -to 0 sc_temp_control ]
 
   # Create instance: Interfaces
   create_hier_cell_Interfaces [current_bd_instance .] Interfaces
@@ -1775,6 +1796,12 @@ proc create_root_design { parentCell } {
 
   # Create instance: synq_reset_system
   create_hier_cell_synq_reset_system [current_bd_instance .] synq_reset_system
+
+  # Create instance: xlconstant_0, and set properties
+  set xlconstant_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:xlconstant:1.1 xlconstant_0 ]
+  set_property -dict [ list \
+   CONFIG.CONST_VAL {0} \
+ ] $xlconstant_0
 
   # Create interface connections
   connect_bd_intf_net -intf_net C0_SYS_CLK_0_1 [get_bd_intf_ports ddr4_c0_ref] [get_bd_intf_pins interface_0_handler/ddr4_c0_ref_clk]
@@ -1807,6 +1834,7 @@ proc create_root_design { parentCell } {
   connect_bd_net -net pcie_rst_n_1 [get_bd_ports pcie_rst_n] [get_bd_pins Memory_Mapped/pcie_user_rst_n]
   connect_bd_net -net traffic_generator_dma_reset_n [get_bd_pins Memory_Mapped/pcie_reset_n] [get_bd_pins synq_reset_system/dma_reset_n]
   connect_bd_net -net traffic_generator_usr_tx_clk [get_bd_pins Interfaces/cmac_if0_tx_clk] [get_bd_pins interface_0_handler/cmac_if0_tx_clk] [get_bd_pins synq_reset_system/cmac_if0_tx_clk]
+  connect_bd_net -net xlconstant_0_dout [get_bd_ports sc_temp_control] [get_bd_pins xlconstant_0/dout]
 
   # Create address segments
   create_bd_addr_seg -range 0x00001000 -offset 0x00000000 [get_bd_addr_spaces Interfaces/cmac_sync_0/s_axi] [get_bd_addr_segs Interfaces/cmac_wrapper_0/s_axi4_lite/reg0] SEG_cmac_wrapper_0_reg0
@@ -1814,6 +1842,10 @@ proc create_root_design { parentCell } {
   create_bd_addr_seg -range 0x00001000 -offset 0x00001000 [get_bd_addr_spaces Memory_Mapped/jtag_axi_0/Data] [get_bd_addr_segs interface_0_handler/interface_settings_0/S_AXI/reg0] SEG_interface_settings_0_reg0
   create_bd_addr_seg -range 0x00001000 -offset 0x00005000 [get_bd_addr_spaces Memory_Mapped/jtag_axi_0/Data] [get_bd_addr_segs interface_0_handler/TCP/iperf2_client_1/s_axi_settings/Reg] SEG_iperf2_client_1_Reg
   create_bd_addr_seg -range 0x00001000 -offset 0x00003000 [get_bd_addr_spaces Memory_Mapped/jtag_axi_0/Data] [get_bd_addr_segs interface_0_handler/performance_debug_reg_0/S_AXI/reg0] SEG_performance_debug_reg_0_reg0
+  create_bd_addr_seg -range 0x00001000 -offset 0x00000000 [get_bd_addr_spaces Memory_Mapped/xdma_0/M_AXI_LITE] [get_bd_addr_segs Interfaces/cmac_wrapper_0/s_axi4_lite/reg0] SEG_cmac_wrapper_0_reg0
+  create_bd_addr_seg -range 0x00001000 -offset 0x00001000 [get_bd_addr_spaces Memory_Mapped/xdma_0/M_AXI_LITE] [get_bd_addr_segs interface_0_handler/interface_settings_0/S_AXI/reg0] SEG_interface_settings_0_reg0
+  create_bd_addr_seg -range 0x00001000 -offset 0x00005000 [get_bd_addr_spaces Memory_Mapped/xdma_0/M_AXI_LITE] [get_bd_addr_segs interface_0_handler/TCP/iperf2_client_1/s_axi_settings/Reg] SEG_iperf2_client_1_Reg
+  create_bd_addr_seg -range 0x00001000 -offset 0x00003000 [get_bd_addr_spaces Memory_Mapped/xdma_0/M_AXI_LITE] [get_bd_addr_segs interface_0_handler/performance_debug_reg_0/S_AXI/reg0] SEG_performance_debug_reg_0_reg0
   create_bd_addr_seg -range 0x000100000000 -offset 0x00000000 [get_bd_addr_spaces interface_0_handler/TCP/datamover_TX/Data] [get_bd_addr_segs interface_0_handler/TCP/memory_controller_c0/C0_DDR4_MEMORY_MAP/C0_DDR4_ADDRESS_BLOCK] SEG_memory_controller_c0_C0_DDR4_ADDRESS_BLOCK
 
 
