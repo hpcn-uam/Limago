@@ -39,8 +39,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
 module cmac_connector_wrapper #(
-	localparam integer  C_S_AXI4_LITE_DATA_WIDTH = 32,
-	localparam integer  C_S_AXI_LITE_ADDR_WIDTH  = 12
+	parameter integer  C_S_AXI4_LITE_DATA_WIDTH = 32,
+	parameter integer  C_S_AXI_LITE_ADDR_WIDTH  = 12
 ) (
 	(* X_INTERFACE_INFO = "xilinx.com:interface:gt:1.0 gt_rx GTX_P" *)
 	input        [                             3:0] gt_rxp_in                ,
