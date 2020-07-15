@@ -29,6 +29,7 @@ if {$use_board eq "VCU118"} {
         }
     }
 } elseif {$use_board eq "ALVEO-U280"} {
+    set gt_ref_clk 156.25
     switch $integrated_interface {
         "1" {
             # Possible core_selection CMACE4_X0Y6 and CMACE4_X0Y7
