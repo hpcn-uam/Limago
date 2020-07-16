@@ -12,7 +12,7 @@ alveou280_board 	= cmac_ALVEOu280_0 cmac_ALVEOu280_1
 
 projects = $(common) $(vcu118_board) $(alveou200_board) $(alveou280_board)
 
-projects : patch_example_files create_project_folder  $(projects)
+projects : create_project_folder  $(projects)
 all: projects
 
 $(projects) : % : $(OBJDIR)/%/component.xml
@@ -41,10 +41,6 @@ create_project_folder:
 	./patch_cmac_files.sh
 	@mkdir -p project
 
-
-.PHONY: patch_example_files
-patch_example_files: 
-	if [ ! -f $(SRCDIR)/cmac_sync/cmac_0_axi4_lite_user_if.v ]; then ./patch_xilinx_files.sh; fi;
 
 CMAC_DEPENDENCES := $(SRCDIR)/cmac/cmac_connector_wrapper.sv \
 		$(SRCDIR)/cmac/cmac_connector.sv \
@@ -80,8 +76,7 @@ $(OBJDIR)/cmac_ALVEOu280_%/component.xml: $(CMAC_DEPENDENCES) $(CMAC_UPLUS_DEPEN
 cmac_sync_recursive_dependencies := $(shell find $(SRCDIR)/cmac_sync -print)
 $(OBJDIR)/cmac_sync/component.xml: $(cmac_sync_recursive_dependencies) \
 								   $(TCLDIR)/cmac_sync.tcl \
-								   $(SRCDIR)/common/types.svh \
-								   $(patch_example_files)
+								   $(SRCDIR)/common/types.svh
 	rm -rf 	$(OBJDIR)/cmac_sync
 	vivado -notrace -mode batch -source $(TCLDIR)/cmac_sync.tcl -tclargs $(TOPDIR)
 
