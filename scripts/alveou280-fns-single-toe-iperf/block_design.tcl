@@ -833,8 +833,8 @@ proc create_hier_cell_TCP { parentCell nameHier } {
    CONFIG.C0.DDR4_MemoryType {RDIMMs} \
    CONFIG.C0.DDR4_TimePeriod {833} \
    CONFIG.C0.ODT_WIDTH {1} \
-   CONFIG.C0_CLOCK_BOARD_INTERFACE {sysclk0} \
-   CONFIG.C0_DDR4_BOARD_INTERFACE {ddr4_sdram_c0} \
+   CONFIG.C0_CLOCK_BOARD_INTERFACE {sysclk1} \
+   CONFIG.C0_DDR4_BOARD_INTERFACE {ddr4_sdram_c1} \
  ] $memory_controller_c0
 
   # Create instance: proc_sys_reset_1, and set properties
@@ -1782,8 +1782,8 @@ proc create_root_design { parentCell } {
    CONFIG.FREQ_HZ {322265625} \
  ] $cmac_if0_rx_clk
   set cmac_if0_rx_rst_n [ create_bd_port -dir O -from 0 -to 0 -type rst cmac_if0_rx_rst_n ]
+  set hbm_cattrip [ create_bd_port -dir O -from 0 -to 0 hbm_cattrip ]
   set pcie_rst_n [ create_bd_port -dir I pcie_rst_n ]
-  set sc_temp_control [ create_bd_port -dir O -from 0 -to 0 sc_temp_control ]
 
   # Create instance: Interfaces
   create_hier_cell_Interfaces [current_bd_instance .] Interfaces
@@ -1834,7 +1834,7 @@ proc create_root_design { parentCell } {
   connect_bd_net -net pcie_rst_n_1 [get_bd_ports pcie_rst_n] [get_bd_pins Memory_Mapped/pcie_user_rst_n]
   connect_bd_net -net traffic_generator_dma_reset_n [get_bd_pins Memory_Mapped/pcie_reset_n] [get_bd_pins synq_reset_system/dma_reset_n]
   connect_bd_net -net traffic_generator_usr_tx_clk [get_bd_pins Interfaces/cmac_if0_tx_clk] [get_bd_pins interface_0_handler/cmac_if0_tx_clk] [get_bd_pins synq_reset_system/cmac_if0_tx_clk]
-  connect_bd_net -net xlconstant_0_dout [get_bd_ports sc_temp_control] [get_bd_pins xlconstant_0/dout]
+  connect_bd_net -net xlconstant_0_dout [get_bd_ports hbm_cattrip] [get_bd_pins xlconstant_0/dout]
 
   # Create address segments
   create_bd_addr_seg -range 0x00001000 -offset 0x00000000 [get_bd_addr_spaces Interfaces/cmac_sync_0/s_axi] [get_bd_addr_segs Interfaces/cmac_wrapper_0/s_axi4_lite/reg0] SEG_cmac_wrapper_0_reg0
