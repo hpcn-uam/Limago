@@ -29,9 +29,11 @@ module alveou280_fns_single_toe_wrapper (
   output wire         pcie_mgt_txp,
   input  wire  [0:0]  pcie_refclk_clk_n,
   input  wire  [0:0]  pcie_refclk_clk_p,
-  input  wire         pcie_rst_n
+  input  wire         pcie_rst_n,
+  output wire         hbm_cattrip
 );
-
+  //This pin addresses the AR# 72926  https://www.xilinx.com/support/answers/72926.html
+  assign hbm_cattrip = 1'b0;
 
   wire         cmac_if0_rx_clk;
   wire         cmac_if0_rx_rst_n;

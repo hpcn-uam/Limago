@@ -25,7 +25,7 @@ set_property -dict {PACKAGE_PIN BH26 PULLUP true IOSTANDARD POD12} [get_ports pc
 # No information about the physical pins of the cage is provided
 
 ##########################################
-## SC temperature controll               #
+## SC temperature control                #
 ##########################################
-#This pin addressess the AR# 72926  https://www.xilinx.com/support/answers/72926.html
-set_property -dict {PACKAGE_PIN D32 PULLDOWN true IOSTANDARD POD12} [get_ports sc_temp_control]
+#This pin addresses the AR# 72926  https://www.xilinx.com/support/answers/72926.html
+set_property -dict {PACKAGE_PIN D32 PULLDOWN true IOSTANDARD POD12} [get_ports hbm_cattrip]
