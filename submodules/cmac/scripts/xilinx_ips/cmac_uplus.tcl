@@ -1,3 +1,9 @@
+# Select number of lane depending on Vivado version
+set vivado_version [version -short]
+set num_lanes "4x25"
+if { [string first "2018.3" $vivado_version] != -1 || [string first "2019.1" $vivado_version] != -1 } {
+    set num_lanes "4"
+}
 # Default GT reference frequency
 set gt_ref_clk 161.1328125
 if {$use_board eq "VCU118"} {
@@ -64,7 +70,7 @@ create_ip -name cmac_usplus -vendor xilinx.com -library ip -module_name ${cmac_n
 
 set_property -dict [list \
     CONFIG.CMAC_CAUI4_MODE           {1} \
-    CONFIG.NUM_LANES                 {4} \
+    CONFIG.NUM_LANES                 $num_lanes \
     CONFIG.GT_REF_CLK_FREQ           $gt_ref_clk \
     CONFIG.CMAC_CORE_SELECT          $core_selection \
     CONFIG.GT_GROUP_SELECT           $group_selection \
