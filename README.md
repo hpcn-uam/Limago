@@ -10,16 +10,11 @@ Make sure you are using `Vivado 2018.3 IP Build 2404404`. It seems to be a bug i
 
 ## Supported Boards
 
-So far [VCU118](https://www.xilinx.com/products/boards-and-kits/vcu118.html#hardware) and [Alveo U200](https://www.xilinx.com/products/boards-and-kits/alveo/u200.html#specifications) are supported. 
+So far [VCU118](https://www.xilinx.com/products/boards-and-kits/vcu118.html#hardware), [Alveo U200](https://www.xilinx.com/products/boards-and-kits/alveo/u200.html#specifications) and [Alveo U280](https://www.xilinx.com/products/boards-and-kits/alveo/u280.html#specifications) are supported. 
 
 - Please check [README.md](submodules/cmac/README.md) of the CMAC wrapper to verify clock frequency for VCU118.
 - The clock Frequency of the Alveo U200 can be configured using two pins, and the project already supports it.
-
-In order to support Alveo U280 you must change the part for the HLS designs, run 
-
-```
-cd submodules/fpga-network-stack-core/scripts; sed -i 's/xcvu9p-flga2104-2l-e/xcu280-fsvh2892-2L-e/g' $(ls); cd -
-```
+> **_NOTE:_**  Please double check that pin D32 is driven to `0` before programming Alveo U280 [AR# 72926](https://www.xilinx.com/support/answers/72926.html)
 
 ## Cloning the repository
 
@@ -38,40 +33,41 @@ git clone git@github.com:hpcn-uam/Limago.git --recursive
 
 The process is fully automated.
 
-1.The first part consist on generating the necessary IP-Cores
-```
-make ips
-```
+1. The first part consist on generating the necessary IP-Cores
+    
+    ```sh
+    make ips
+    ```
 
-2. Generate Vivado Project.
+1. Generate Vivado Project.
 
-a. Check available projects
-```
-make help
-```
+    a. Check available projects
+    ```sh
+    make help
+    ```
 
-b. Create Project
-```
-make create_prj_vcu118-fns-single-toe-iperf
-```
+    b. Create Project
+    ```sh
+    make create_prj_vcu118-fns-single-toe-iperf
+    ```
 
-Once the project is create you can open it. The projects are created under the folder `projects/<project_name>`
+    Once the project is create you can open it. The projects are created under the folder `projects/<project_name>`
 
-For instance, you can open the project with Vivado:
+    For instance, you can open the project with Vivado:
 
-```
-vivado projects/vcu118-fns-single-toe-iperf/vcu118-fns-single-toe-iperf.xpr
-```
+    ```sh
+    vivado projects/vcu118-fns-single-toe-iperf/vcu118-fns-single-toe-iperf.xpr
+    ```
 
-3. Implement a project 
+1. Implement a project 
 
-You can either launch it manually from the GUI or using the following command:
+    You can either launch it manually from the GUI or using the following command:
 
-```
-make implement_prj_vcu118-fns-single-toe-iperf
-```
+    ```sh
+    make implement_prj_vcu118-fns-single-toe-iperf
+    ```
 
-*It is suggested to close the GUI when launching this command.*
+    *It is suggested to close the GUI when launching this command.*
 
 </details>
 
@@ -96,7 +92,7 @@ By default Limago IP address is 192.168.0.5, network mask 255.255.255.0 and its 
 
 Once you have configured your HOST with a proper IP address in the same subnetwork as Limago you can use `arping` and `ping` to reach Limago.
 
-```
+```sh
 arping -I <interface_name> 192.168.0.5
 ping 192.168.0.5
 ```
@@ -123,7 +119,7 @@ In this case, the FPGA can work both as a client and as a server. Make sure that
 
 - FPGA as a server, which means the FPGA just gets data. By default the FPGA is listening to the range of ports between 5000 to 5063, therefore you can target any of those ports. Run the following code in the server with the NIC connected to Limago.
 
-```
+```sh
 iperf -c 192.168.0.5 -t 10 -i 1 -p 5011 --mss 1408 -e
 ```
 
@@ -133,7 +129,7 @@ iperf -c 192.168.0.5 -t 10 -i 1 -p 5011 --mss 1408 -e
 
 First of all, the server machine must run `iperf` (version 2) a as server `iperf -s -i 1`. After that, you you can run the iperf application from the FPGA as a client.
 
-```
+```sh
 sudo ./bin/hw_iperf2 -c <server_ip_address> -t 10 -p 5001 -e
 ```
 
