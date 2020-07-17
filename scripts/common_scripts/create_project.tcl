@@ -25,7 +25,7 @@ create_project ${project_name} ${project_dir}/${project_name} -part ${fpga_part}
 set_property board_part ${fpga_board} [current_project]
 
 #Adding the ip path to the project
-set_property  ip_repo_paths  "$submodules_ip_dir" [current_project]
+set_property  ip_repo_paths  [list $cmac_dir $stack_dir] [current_project]
 
 #A block design is created
 create_bd_design "bd"
