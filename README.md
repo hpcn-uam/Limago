@@ -1,5 +1,7 @@
 # Limago 100GbE Ethernet framework with TCP/IP support
 
+**This repository is no longer active, we refer you to https://github.com/fpgasystems/fpga-network-stack**
+
 ## Introduction
 
 This repository puts together all the necessary pieces to generate Limago.
